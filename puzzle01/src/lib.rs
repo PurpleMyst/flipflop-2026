@@ -37,4 +37,3 @@ pub fn solve_part3() -> impl Display {
         .map(|(n, t)| if n > t { (n - t) * 5 } else { t - n })
         .sum::<u16>()
 }
-
