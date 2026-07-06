@@ -1,4 +1,10 @@
 pre-commit:
   commands:
     cargo-fmt:
-      run: cargo +nightly fmt --check
+      glob: "*.rs"
+      run: cargo +nightly fmt
+      stage_fixed: true
+    tasks-py-format:
+      glob: tasks.py
+      run: uvx ruff format tasks.py && uvx isort tasks.py
+      stage_fixed: true
