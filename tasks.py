@@ -1,9 +1,9 @@
 # /// script
 # requires-python = ">=3.11"
 # dependencies = [
+#     "browser-cookie3",
 #     "cyclopts",
-#     "python-dotenv",
-#     "requests",
+#     "httpx",
 #     "termcolor",
 #     "tomlkit",
 #     "tabulate",
@@ -22,7 +22,6 @@ from pathlib import Path
 
 import tomlkit as toml
 from cyclopts import App
-from dotenv import load_dotenv
 from termcolor import colored as c
 
 
@@ -69,9 +68,8 @@ TASKS_METADATA = toml.parse(WORKSPACE_MANIFEST_PATH.read_text())["workspace"].ge
 ).get("tasks", {})
 PROBLEM_NAME = TASKS_METADATA.get("problem_name", "problem")
 PROBLEM_DIGITS = TASKS_METADATA.get("problem_digits", 2)
-
-
-load_dotenv()
+YEAR = TASKS_METADATA["year"]
+FLIPFLOP_HOST = "flipflop.slome.org"
 
 
 def run(cmd: t.Sequence[str | Path], /, **kwargs) -> subprocess.CompletedProcess:
@@ -118,6 +116,34 @@ def find_next_problem_number() -> int:
     return next_number
 
 
+def flipflop_session() -> str:
+    import browser_cookie3
+
+    cookies = browser_cookie3.firefox(domain_name=FLIPFLOP_HOST)
+    for cookie in cookies:
+        if cookie.name == "PHPSESSID":
+            return cookie.value
+    raise RuntimeError(f"No PHPSESSID cookie found for {FLIPFLOP_HOST} in Firefox.")
+
+
+def fetch_input(num: int) -> bytes:
+    import httpx
+
+    url = f"https://{FLIPFLOP_HOST}/{YEAR}/{num}/input"
+    response = httpx.get(
+        url,
+        cookies={"PHPSESSID": flipflop_session()},
+        headers={
+            "Accept": "text/plain,*/*",
+            "Referer": f"https://{FLIPFLOP_HOST}/{YEAR}/{num}",
+        },
+    )
+    content = response.raise_for_status().content
+    if not content or content.startswith(b"You must be logged in"):
+        raise RuntimeError("No input could be fetched with the Firefox PHPSESSID cookie.")
+    return content
+
+
 @app.command(name="start_solve", alias="ss")
 @in_root_dir
 def start_solve(num: int | None = None) -> None:
@@ -132,6 +158,8 @@ def start_solve(num: int | None = None) -> None:
     if crate_path.exists():
         print(f"{crate} already exists.")
         return
+
+    input_txt = fetch_input(num)
 
     manifest = toml.parse(WORKSPACE_MANIFEST_PATH.read_text())
     if crate not in manifest["workspace"]["members"]:  # type: ignore
@@ -159,6 +187,7 @@ def start_solve(num: int | None = None) -> None:
     src = crate_path / "src"
     (src / "main.rs").write_text(MAIN.format(crate=crate), newline="\n")
     (src / "lib.rs").write_text(LIB, newline="\n")
+    (src / "input.txt").write_bytes(input_txt)
 
     benches = Path("benchmark", "benches")
     add_line(benches / "criterion.rs", f"    {crate},")

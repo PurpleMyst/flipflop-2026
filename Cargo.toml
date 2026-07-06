@@ -8,6 +8,7 @@ members = [
 [workspace.metadata.tasks]
 problem_name = "puzzle"
 problem_digits = 2
+year = 2026
 
 [workspace.metadata.puzzle01]
 start_time = 2026-07-06T15:37:08.233412
