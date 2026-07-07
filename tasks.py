@@ -147,6 +147,82 @@ def fetch_input(num: int) -> bytes:
     return content
 
 
+def current_problem_number() -> int:
+    cwd = Path.cwd().resolve()
+    root = WORKSPACE_MANIFEST_PATH.parent.resolve()
+    for path in (cwd, *cwd.parents):
+        match = re.fullmatch(rf"{re.escape(PROBLEM_NAME)}(\d+)", path.name)
+        if match:
+            return int(match.group(1))
+        if path == root:
+            break
+    print(
+        cb(
+            f"Not in a {PROBLEM_NAME} directory and no problem number was provided.",
+            "red",
+        )
+    )
+    sys.exit(1)
+
+
+def problem_crate(num: int) -> str:
+    return f"{PROBLEM_NAME}{int(num):0{PROBLEM_DIGITS}d}"
+
+
+def run_solution(num: int) -> list[str]:
+    proc = run(
+        ("cargo", "run", "--quiet", "-p", problem_crate(num)),
+        cwd=WORKSPACE_MANIFEST_PATH.parent,
+        stdout=subprocess.PIPE,
+        text=True,
+    )
+    return proc.stdout.splitlines()
+
+
+def infer_part(answers: list[str]) -> int:
+    candidates = [
+        part
+        for part, answer in enumerate(answers[:3], start=1)
+        if answer.strip() != "TODO"
+    ]
+    if not candidates:
+        print(
+            cb(
+                "Could not infer a part: no non-TODO answer lines were produced.",
+                "red",
+            )
+        )
+        sys.exit(1)
+    return candidates[-1]
+
+
+def post_submission(num: int, part: int, answer: str) -> str:
+    import httpx
+
+    url = f"https://{FLIPFLOP_HOST}/{YEAR}/{num}/{part}/submit"
+    response = httpx.post(
+        url,
+        data={"answer": answer},
+        cookies={"PHPSESSID": flipflop_session()},
+        headers={
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Origin": f"https://{FLIPFLOP_HOST}",
+            "Referer": f"https://{FLIPFLOP_HOST}/{YEAR}/{num}",
+        },
+    )
+    return response.raise_for_status().text
+
+
+def parse_submission_result(html: str) -> tuple[str, str | None]:
+    rank_match = re.search(r"You are ranked\s+(\d+)", html)
+    rank = rank_match.group(1) if rank_match else None
+    if "That is correct!" in html:
+        return "correct", rank
+    if "This answer is incorrect!" in html or "Your answer is incorrect." in html:
+        return "incorrect", rank
+    return "unknown", rank
+
+
 @app.command(name="start_solve", alias="ss")
 @in_root_dir
 def start_solve(num: int | None = None) -> None:
@@ -155,7 +231,7 @@ def start_solve(num: int | None = None) -> None:
     if num is None:
         num = find_next_problem_number()
 
-    crate = f"{PROBLEM_NAME}{int(num):0{PROBLEM_DIGITS}d}"
+    crate = problem_crate(num)
     crate_path = Path(crate)
 
     if crate_path.exists():
@@ -196,6 +272,57 @@ def start_solve(num: int | None = None) -> None:
     add_line(benches / "criterion.rs", f"    {crate},")
 
     run(("git", "add", crate))
+
+
+@app.command(name="submit", alias="s")
+def submit(
+    part: int | None = None,
+    answer: str | None = None,
+    num: int | None = None,
+) -> None:
+    "Submit an answer for a problem part."
+    if num is None:
+        num = current_problem_number()
+
+    answers: list[str] = []
+    if part is None or answer is None:
+        answers = run_solution(num)
+
+    if part is None:
+        part = infer_part(answers)
+        print(f"Inferred part {part}.")
+
+    if not 1 <= part <= 3:
+        print(cb("Part must be 1, 2, or 3.", "red"))
+        sys.exit(1)
+
+    if answer is None:
+        if len(answers) < part:
+            print(cb(f"Solver produced only {len(answers)} answer lines.", "red"))
+            sys.exit(1)
+        answer = answers[part - 1]
+        if answer.strip() == "TODO":
+            print(cb(f"Part {part} still prints TODO.", "red"))
+            sys.exit(1)
+
+    crate = problem_crate(num)
+    print(f"Submitting {crate} part {part}.")
+    result, rank = parse_submission_result(post_submission(num, part, answer))
+
+    if result == "correct":
+        print(cb("Correct.", "green"))
+        if rank is not None:
+            print(f"Rank: {rank}")
+        if part == 3:
+            set_completion_time_for(crate)
+        return
+
+    if result == "incorrect":
+        print(cb("Incorrect.", "red"))
+        sys.exit(1)
+
+    print(cb("Unknown submission response.", "yellow"))
+    sys.exit(1)
 
 
 @app.command(name="set_baseline", alias="sb")
@@ -305,15 +432,7 @@ def measure_completion_time() -> None:
     )
 
 
-@app.command(name="set_completion_time", alias="sct")
-def set_completion_time() -> None:
-    "Set the completion time for the problem you're currently in."
-
-    problem = Path.cwd().resolve().name
-    if not problem.startswith(PROBLEM_NAME):
-        print(cb(f"Not in a {PROBLEM_NAME} directory.", "red"))
-        return
-
+def set_completion_time_for(problem: str) -> None:
     manifest = toml.parse(WORKSPACE_MANIFEST_PATH.read_text())
     metadata = manifest["workspace"].setdefault("metadata", {})
     problem_metadata = metadata.setdefault(problem, {})
@@ -324,6 +443,18 @@ def set_completion_time() -> None:
 
     with WORKSPACE_MANIFEST_PATH.open("w") as manifest_f:
         toml.dump(manifest, manifest_f)
+
+
+@app.command(name="set_completion_time", alias="sct")
+def set_completion_time() -> None:
+    "Set the completion time for the problem you're currently in."
+
+    problem = Path.cwd().resolve().name
+    if not problem.startswith(PROBLEM_NAME):
+        print(cb(f"Not in a {PROBLEM_NAME} directory.", "red"))
+        return
+
+    set_completion_time_for(problem)
 
 
 def main() -> None:
