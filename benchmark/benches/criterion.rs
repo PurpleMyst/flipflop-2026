@@ -32,4 +32,5 @@ macro_rules! problems {
 #[rustfmt::skip]
 problems!(
     puzzle01,
+    puzzle02,
 );
