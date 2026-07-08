@@ -33,4 +33,5 @@ macro_rules! problems {
 problems!(
     puzzle01,
     puzzle02,
+    puzzle03,
 );
