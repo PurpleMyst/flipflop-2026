@@ -1,5 +1,7 @@
 use std::fmt::Display;
 
+use rayon::prelude::*;
+
 #[inline]
 pub fn solve() -> (impl Display, impl Display, impl Display) {
     (solve_part1(), solve_part2(), solve_part3())
@@ -11,9 +13,9 @@ pub fn solve_part1() -> impl Display {
         .lines()
         .max_by_key(|line| {
             line.len()
-                * (line.chars().any(|c: char| c.is_ascii_lowercase()) as usize
-                    + line.chars().any(|c: char| c.is_ascii_uppercase()) as usize
-                    + line.chars().any(|c: char| c.is_ascii_digit()) as usize)
+                * (line.bytes().any(|c| c.is_ascii_lowercase()) as usize
+                    + line.bytes().any(|c| c.is_ascii_uppercase()) as usize
+                    + line.bytes().any(|c| c.is_ascii_digit()) as usize)
         })
         .unwrap()
 }
@@ -28,15 +30,14 @@ pub fn solve_part2() -> impl Display {
 
 #[inline]
 pub fn solve_part3() -> impl Display {
-    ('a'..='z')
-        .chain('A'..='Z')
-        .chain('0'..='9')
-        .map(|big_c| {
+    b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        .into_par_iter()
+        .map(|&big_c| {
             include_str!("input.txt")
                 .lines()
                 .map(|line| {
                     let mut line = String::from(line);
-                    line.push(big_c);
+                    line.push(big_c as char);
                     strength(&line)
                 })
                 .sum::<usize>()
@@ -46,7 +47,7 @@ pub fn solve_part3() -> impl Display {
 }
 
 fn strength(line: &str) -> usize {
-    let mut cs = line.chars();
+    let mut cs = line.bytes();
 
     let mut k = cs.next().unwrap();
     let mut n = 1;
@@ -64,10 +65,10 @@ fn strength(line: &str) -> usize {
     }
 
     line.len()
-        * ((line.chars().any(|c: char| c.is_ascii_lowercase()) as usize
-            + line.chars().any(|c: char| c.is_ascii_uppercase()) as usize
-            + line.chars().any(|c: char| c.is_ascii_digit()) as usize)
-            + 7 * ((line.chars().any(|c| c == '7') && line.chars().filter(|c| c.is_ascii_digit()).all(|c| c == '7'))
+        * ((line.bytes().any(|c| c.is_ascii_lowercase()) as usize
+            + line.bytes().any(|c| c.is_ascii_uppercase()) as usize
+            + line.bytes().any(|c| c.is_ascii_digit()) as usize)
+            + 7 * ((line.bytes().any(|c| c == b'7') && line.bytes().filter(|c| c.is_ascii_digit()).all(|c| c == b'7'))
                 as usize)
             + m * m)
         * (if line.contains("red") || line.contains("green") || line.contains("blue") {
