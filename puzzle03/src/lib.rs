@@ -21,38 +21,8 @@ pub fn solve_part1() -> impl Display {
 pub fn solve_part2() -> impl Display {
     include_str!("input.txt")
         .lines()
-        .max_by_key(|line| part2_value(line))
+        .max_by_key(|line| State::from_line(line).value())
         .unwrap()
-}
-
-fn part2_value(line: &str) -> u16 {
-    let mut flags = 0;
-    let mut run_char = 0;
-    let mut run_length = 0;
-    let mut best_run_length = 0;
-    let mut color_state = ColorState::Idle;
-
-    for c in line.bytes() {
-        flags |= BYTE_FLAGS[c as usize];
-
-        if c == run_char {
-            run_length += 1;
-            if run_length >= 3 {
-                best_run_length = best_run_length.max(run_length);
-            }
-        } else {
-            run_char = c;
-            run_length = 1;
-        }
-
-        color_state = color_state.push(c);
-    }
-
-    line.len() as u16
-        * ((flags & CLASS_MASK).count_ones() as u16
-            + 7 * ((flags & SAW_SEVEN != 0 && flags & SAW_NONSEVEN == 0) as u16)
-            + best_run_length as u16 * best_run_length as u16)
-        * color_state.multiplier()
 }
 
 #[inline]
@@ -204,15 +174,18 @@ impl State {
 
         state
     }
+
+    fn value(self) -> u16 {
+        self.len as u16
+            * (FLAG_SCORE[(self.flags & FLAG_MASK) as usize]
+                + self.best_run_length as u16 * self.best_run_length as u16)
+            * self.color_state.multiplier()
+    }
+
     fn value_after_push(self, c: u8) -> u16 {
         let flags = self.flags | BYTE_FLAGS[c as usize];
-        let best_run_length = if c == self.run_char {
-            let run_length = self.run_length + 1;
-            if run_length >= 3 {
-                self.best_run_length.max(run_length)
-            } else {
-                self.best_run_length
-            }
+        let best_run_length = if c == self.run_char && self.run_length >= 2 {
+            self.best_run_length.max(self.run_length + 1)
         } else {
             self.best_run_length
         };
