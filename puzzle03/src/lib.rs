@@ -52,12 +52,12 @@ struct State {
     saw_nonseven: bool,
 
     run_char: u8,
-    run_length: u16,
-    best_run_length: u16,
+    run_length: u8,
+    best_run_length: u8,
 
     color_state: ColorState,
 
-    len: u16,
+    len: u8,
 }
 
 #[derive(Default, Clone, Copy)]
@@ -142,10 +142,10 @@ impl State {
     }
 
     fn value(self) -> u16 {
-        self.len
+        self.len as u16
             * ((self.saw_lower as u16 + self.saw_upper as u16 + self.saw_digit as u16)
                 + 7 * ((self.saw_seven && !self.saw_nonseven) as u16)
-                + self.best_run_length * self.best_run_length)
+                + self.best_run_length as u16 * self.best_run_length as u16)
             * (if matches!(self.color_state, ColorState::Green | ColorState::Red | ColorState::Blue) {
                 3
             } else {
