@@ -12,10 +12,10 @@ pub fn solve_part1() -> impl Display {
     include_str!("input.txt")
         .lines()
         .max_by_key(|line| {
-            line.len()
-                * (line.bytes().any(|c| c.is_ascii_lowercase()) as usize
-                    + line.bytes().any(|c| c.is_ascii_uppercase()) as usize
-                    + line.bytes().any(|c| c.is_ascii_digit()) as usize)
+            line.len() as u16
+                * (line.bytes().any(|c| c.is_ascii_lowercase()) as u16
+                    + line.bytes().any(|c| c.is_ascii_uppercase()) as u16
+                    + line.bytes().any(|c| c.is_ascii_digit()) as u16)
         })
         .unwrap()
 }
@@ -37,7 +37,7 @@ pub fn solve_part3() -> impl Display {
 
     b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         .into_par_iter()
-        .map(|&big_c| states.iter().map(|state| state.push(big_c).value()).sum::<usize>())
+        .map(|&big_c| states.iter().map(|state| state.push(big_c).value()).sum::<u16>())
         .max()
         .unwrap()
 }
@@ -52,12 +52,12 @@ struct State {
     saw_nonseven: bool,
 
     run_char: u8,
-    run_length: usize,
-    best_run_length: usize,
+    run_length: u16,
+    best_run_length: u16,
 
     color_state: ColorState,
 
-    len: usize,
+    len: u16,
 }
 
 #[derive(Default, Clone, Copy)]
@@ -141,10 +141,10 @@ impl State {
         s.into_iter().fold(self, |state, c| state.push(c))
     }
 
-    fn value(self) -> usize {
+    fn value(self) -> u16 {
         self.len
-            * ((self.saw_lower as usize + self.saw_upper as usize + self.saw_digit as usize)
-                + 7 * ((self.saw_seven && !self.saw_nonseven) as usize)
+            * ((self.saw_lower as u16 + self.saw_upper as u16 + self.saw_digit as u16)
+                + 7 * ((self.saw_seven && !self.saw_nonseven) as u16)
                 + self.best_run_length * self.best_run_length)
             * (if matches!(self.color_state, ColorState::Green | ColorState::Red | ColorState::Blue) {
                 3
