@@ -44,21 +44,20 @@ pub fn solve_part3() -> impl Display {
 
 #[derive(Default, Clone, Copy)]
 struct State {
-    saw_lower: bool,
-    saw_upper: bool,
-    saw_digit: bool,
-
-    saw_seven: bool,
-    saw_nonseven: bool,
-
+    flags: u8,
     run_char: u8,
     run_length: u8,
     best_run_length: u8,
-
     color_state: ColorState,
-
     len: u8,
 }
+
+const SAW_LOWER: u8 = 1 << 0;
+const SAW_UPPER: u8 = 1 << 1;
+const SAW_DIGIT: u8 = 1 << 2;
+const SAW_SEVEN: u8 = 1 << 3;
+const SAW_NONSEVEN: u8 = 1 << 4;
+const CLASS_MASK: u8 = SAW_LOWER | SAW_UPPER | SAW_DIGIT;
 
 #[derive(Default, Clone, Copy)]
 enum ColorState {
@@ -85,16 +84,16 @@ impl State {
     fn push(self, c: u8) -> Self {
         let mut new = self;
         if c.is_ascii_lowercase() {
-            new.saw_lower = true;
+            new.flags |= SAW_LOWER;
         } else if c.is_ascii_uppercase() {
-            new.saw_upper = true;
+            new.flags |= SAW_UPPER;
         } else if c.is_ascii_digit() {
-            new.saw_digit = true;
+            new.flags |= SAW_DIGIT;
 
             if c == b'7' {
-                new.saw_seven = true;
+                new.flags |= SAW_SEVEN;
             } else {
-                new.saw_nonseven = true;
+                new.flags |= SAW_NONSEVEN;
             }
         }
 
@@ -143,8 +142,8 @@ impl State {
 
     fn value(self) -> u16 {
         self.len as u16
-            * ((self.saw_lower as u16 + self.saw_upper as u16 + self.saw_digit as u16)
-                + 7 * ((self.saw_seven && !self.saw_nonseven) as u16)
+            * ((self.flags & CLASS_MASK).count_ones() as u16
+                + 7 * ((self.flags & SAW_SEVEN != 0 && self.flags & SAW_NONSEVEN == 0) as u16)
                 + self.best_run_length as u16 * self.best_run_length as u16)
             * (if matches!(self.color_state, ColorState::Green | ColorState::Red | ColorState::Blue) {
                 3
