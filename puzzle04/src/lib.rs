@@ -25,13 +25,11 @@ pub fn solve_part3() -> impl Display {
     let mut flower = load_input().filter(|&n| n != 0).collect::<Vec<_>>();
     let mut answer = 0;
     while !flower.is_empty() {
-        let mut side = flower[0];
-        for i in 1..flower.len() {
-            if side == flower[i] {
+        for i in 0..flower.len() - 1 {
+            if flower[i] == flower[i + 1] {
                 continue;
             }
-            side = flower[i];
-            flower[i - 1] = 0;
+            flower[i] = 0;
         }
         flower.pop();
         flower.retain(|&n| n != 0);
