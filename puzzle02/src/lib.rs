@@ -3,18 +3,18 @@ use std::{cmp::Reverse, fmt::Display};
 const N: u8 = 100;
 
 fn exec(p: &mut u8, b: u8) {
-    match b {
-        b'>' => *p = (*p + 1) % N,
-        b'<' => *p = p.checked_sub(1).unwrap_or(N - 1),
-        _ => unreachable!(),
+    if b == b'>' {
+        *p = (*p + 1) % N
+    } else {
+        *p = p.checked_sub(1).unwrap_or(N - 1)
     }
 }
 
 fn exec_rev(p: &mut u8, b: u8) {
-    match b {
-        b'<' => *p = (*p + 1) % N,
-        b'>' => *p = p.checked_sub(1).unwrap_or(N - 1),
-        _ => unreachable!(),
+    if b == b'<' {
+        *p = (*p + 1) % N
+    } else {
+        *p = p.checked_sub(1).unwrap_or(N - 1)
     }
 }
 
