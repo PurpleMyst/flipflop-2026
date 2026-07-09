@@ -365,9 +365,6 @@ version = "0.1.0"
 [[package]]
 name = "puzzle03"
 version = "0.1.0"
-dependencies = [
- "rayon",
-]
 
 [[package]]
 name = "puzzle04"
