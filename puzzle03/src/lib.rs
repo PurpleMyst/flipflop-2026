@@ -59,7 +59,7 @@ fn part2_value(line: &str) -> u16 {
 pub fn solve_part3() -> impl Display {
     let mut states = Vec::with_capacity(100);
     for line in include_str!("input.txt").lines() {
-        states.push(State::default().push_many(line.bytes()));
+        states.push(State::from_line(line));
     }
 
     b"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -182,31 +182,28 @@ impl ColorState {
 }
 
 impl State {
-    fn push(self, c: u8) -> Self {
-        let mut new = self;
-        new.flags |= BYTE_FLAGS[c as usize];
+    fn from_line(line: &str) -> Self {
+        let mut state = Self::default();
 
-        if c == self.run_char {
-            new.run_length += 1;
-            if new.run_length >= 3 {
-                new.best_run_length = new.best_run_length.max(new.run_length);
+        for c in line.bytes() {
+            state.flags |= BYTE_FLAGS[c as usize];
+
+            if c == state.run_char {
+                state.run_length += 1;
+                if state.run_length >= 3 {
+                    state.best_run_length = state.best_run_length.max(state.run_length);
+                }
+            } else {
+                state.run_char = c;
+                state.run_length = 1;
             }
-        } else {
-            new.run_char = c;
-            new.run_length = 1;
+
+            state.color_state = state.color_state.push(c);
+            state.len += 1;
         }
 
-        new.color_state = self.color_state.push(c);
-
-        new.len += 1;
-
-        new
+        state
     }
-
-    fn push_many(self, s: impl IntoIterator<Item = u8>) -> Self {
-        s.into_iter().fold(self, |state, c| state.push(c))
-    }
-
     fn value_after_push(self, c: u8) -> u16 {
         let flags = self.flags | BYTE_FLAGS[c as usize];
         let best_run_length = if c == self.run_char {
