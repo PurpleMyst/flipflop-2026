@@ -99,50 +99,56 @@ fn wrong(b: u8) -> u8 {
     }
 }
 
-fn walk_p3(map: &[u8], y: usize, x: usize, changed: Option<(usize, usize, u8)>, turns: usize, seen: &mut Seen) -> u16 {
+fn walk_p3<const CHANGED: bool>(
+    map: &[u8],
+    y: usize,
+    x: usize,
+    changed: Option<(usize, usize, u8)>,
+    turns: usize,
+    seen: &mut Seen,
+) -> u16 {
     if !seen.insert(y, x) {
         if turns == 3 || x == 0 || y == 0 || x == SIDE - 1 || y == SIDE - 1 {
             seen.len
         } else {
-            let b = if let Some((cy, cx, cb)) = changed
-                && (cy, cx) == (y, x)
-            {
-                cb
+            let b = if CHANGED {
+                let (cy, cx, cb) = changed.unwrap();
+                if (cy, cx) == (y, x) { cb } else { map[y * SIDE + x] }
             } else {
                 map[y * SIDE + x]
             };
             match wrong(b) {
-                b'>' => walk_p3(map, y, x + 1, changed, turns + 1, seen),
-                b'<' => walk_p3(map, y, x - 1, changed, turns + 1, seen),
-                b'^' => walk_p3(map, y - 1, x, changed, turns + 1, seen),
-                b'v' => walk_p3(map, y + 1, x, changed, turns + 1, seen),
+                b'>' => walk_p3::<CHANGED>(map, y, x + 1, changed, turns + 1, seen),
+                b'<' => walk_p3::<CHANGED>(map, y, x - 1, changed, turns + 1, seen),
+                b'^' => walk_p3::<CHANGED>(map, y - 1, x, changed, turns + 1, seen),
+                b'v' => walk_p3::<CHANGED>(map, y + 1, x, changed, turns + 1, seen),
                 _ => unreachable!(),
             }
         }
-    } else if changed.is_some() || x == 0 || y == 0 || x == SIDE - 1 || y == SIDE - 1 {
+    } else if CHANGED || x == 0 || y == 0 || x == SIDE - 1 || y == SIDE - 1 {
         match map[y * SIDE + x] {
-            b'>' => walk_p3(map, y, x + 1, changed, turns, seen),
-            b'<' => walk_p3(map, y, x - 1, changed, turns, seen),
-            b'^' => walk_p3(map, y - 1, x, changed, turns, seen),
-            b'v' => walk_p3(map, y + 1, x, changed, turns, seen),
+            b'>' => walk_p3::<CHANGED>(map, y, x + 1, changed, turns, seen),
+            b'<' => walk_p3::<CHANGED>(map, y, x - 1, changed, turns, seen),
+            b'^' => walk_p3::<CHANGED>(map, y - 1, x, changed, turns, seen),
+            b'v' => walk_p3::<CHANGED>(map, y + 1, x, changed, turns, seen),
             _ => unreachable!(),
         }
     } else {
         let seen_copy = *seen;
-        let right = walk_p3(map, y, x + 1, Some((y, x, b'>')), turns, seen);
+        let right = walk_p3::<true>(map, y, x + 1, Some((y, x, b'>')), turns, seen);
         seen.clone_from(&seen_copy);
-        let left = walk_p3(map, y, x - 1, Some((y, x, b'<')), turns, seen);
+        let left = walk_p3::<true>(map, y, x - 1, Some((y, x, b'<')), turns, seen);
         seen.clone_from(&seen_copy);
-        let up = walk_p3(map, y - 1, x, Some((y, x, b'^')), turns, seen);
+        let up = walk_p3::<true>(map, y - 1, x, Some((y, x, b'^')), turns, seen);
         seen.clone_from(&seen_copy);
-        let down = walk_p3(map, y + 1, x, Some((y, x, b'v')), turns, seen);
+        let down = walk_p3::<true>(map, y + 1, x, Some((y, x, b'v')), turns, seen);
         seen.clone_from(&seen_copy);
 
         left.max(right).max(up).max(down).max(match map[y * SIDE + x] {
-            b'>' => walk_p3(map, y, x + 1, None, turns, seen),
-            b'<' => walk_p3(map, y, x - 1, None, turns, seen),
-            b'^' => walk_p3(map, y - 1, x, None, turns, seen),
-            b'v' => walk_p3(map, y + 1, x, None, turns, seen),
+            b'>' => walk_p3::<false>(map, y, x + 1, None, turns, seen),
+            b'<' => walk_p3::<false>(map, y, x - 1, None, turns, seen),
+            b'^' => walk_p3::<false>(map, y - 1, x, None, turns, seen),
+            b'v' => walk_p3::<false>(map, y + 1, x, None, turns, seen),
             _ => unreachable!(),
         })
     }
@@ -162,7 +168,7 @@ pub fn solve_part2() -> impl Display {
 #[inline]
 pub fn solve_part3() -> impl Display {
     let map = load_map();
-    walk_p3(&map, 0, 0, None, 0, &mut Seen::default())
+    walk_p3::<false>(&map, 0, 0, None, 0, &mut Seen::default())
 }
 
 #[cfg(test)]
