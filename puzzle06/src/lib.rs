@@ -1,5 +1,7 @@
-use std::collections::{HashMap, HashSet, VecDeque};
-use std::fmt::Display;
+use std::{
+    collections::{HashMap, HashSet, VecDeque},
+    fmt::Display,
+};
 
 const WIDTH: usize = 200;
 const HEIGHT: usize = WIDTH / 2;
@@ -222,4 +224,3 @@ pub fn solve_part3() -> impl Display {
 fn prime(len: usize) -> bool {
     !(2..len).any(|n| len.is_multiple_of(n))
 }
-

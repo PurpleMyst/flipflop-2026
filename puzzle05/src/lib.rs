@@ -154,4 +154,3 @@ pub fn solve_part3() -> impl Display {
         .collect::<Vec<_>>();
     walk_p3(&map, 0, 0, None, 0, &mut Default::default())
 }
-
