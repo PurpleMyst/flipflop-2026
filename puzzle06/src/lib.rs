@@ -7,8 +7,8 @@ const WORDS: usize = CELLS.div_ceil(64);
 
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum Rotation {
-    CW,
-    CCW,
+    Clockwise,
+    CounterClockwise,
 }
 use Rotation::*;
 
@@ -17,8 +17,8 @@ impl std::ops::Not for Rotation {
 
     fn not(self) -> Self::Output {
         match self {
-            CW => CCW,
-            CCW => CW,
+            Clockwise => CounterClockwise,
+            CounterClockwise => Clockwise,
         }
     }
 }
@@ -58,8 +58,8 @@ impl Seen {
 fn letter_positions(map: &[u8]) -> [usize; 26] {
     let mut positions = [usize::MAX; 26];
     for (idx, &cell) in map.iter().enumerate() {
-        if cell.is_ascii_lowercase() {
-            positions[(cell - b'a') as usize] = idx;
+        if cell.is_ascii_uppercase() {
+            positions[(cell - b'A') as usize] = idx;
         }
     }
     positions
@@ -79,7 +79,7 @@ pub fn solve_part1() -> impl Display {
 
     let start_idx = map.iter().position(|&b| b == b'S').unwrap();
     let mut q = VecDeque::new();
-    q.push_back((start_idx / WIDTH, start_idx % WIDTH, CCW));
+    q.push_back((start_idx / WIDTH, start_idx % WIDTH, CounterClockwise));
     let mut state = Seen::default();
     let mut lights = Vec::new();
 
@@ -89,7 +89,7 @@ pub fn solve_part1() -> impl Display {
         }
 
         if map[y * WIDTH + x] == b'*' {
-            lights.push((y, x, r == CCW));
+            lights.push((y, x, r == CounterClockwise));
             continue;
         }
 
@@ -127,22 +127,25 @@ fn do_solve(map: &[u8]) -> u64 {
     let start_idx = map.iter().position(|&b| b == b'S').unwrap();
     let positions = letter_positions(map);
     let mut q = VecDeque::new();
-    q.push_back((start_idx / WIDTH, start_idx % WIDTH, CCW));
+    q.push_back((start_idx / WIDTH, start_idx % WIDTH, CounterClockwise));
     let mut state = [None; CELLS];
 
-    while !q.is_empty() {
-        while let Some((y, x, r)) = q.pop_front() {
-            let index = y * WIDTH + x;
-            if state[index].is_some() {
-                continue;
-            }
-            state[index] = Some(r);
+    while let Some((y, x, r)) = q.pop_front() {
+        let index = y * WIDTH + x;
+        if state[index].is_some() {
+            continue;
+        }
+        state[index] = Some(r);
 
-            if map[index] == b'*' {
-                lights.push((y, x, r == CCW));
-                continue;
-            }
-
+        if map[index] == b'*' {
+            lights.push((y, x, r == CounterClockwise));
+            continue;
+        } else if map[index].is_ascii_lowercase() {
+            let output_idx = positions[(map[index] - b'a') as usize];
+            let output_y = output_idx / WIDTH;
+            let output_x = output_idx % WIDTH;
+            q.push_back((output_y, output_x, !r));
+        } else {
             q.extend(
                 [
                     (y.wrapping_sub(1), x),
@@ -156,26 +159,6 @@ fn do_solve(map: &[u8]) -> u64 {
                 .map(|(ny, nx)| (ny, nx, !r)),
             )
         }
-
-        q.extend(map.iter().enumerate().filter_map(|(idx, &cell)| {
-            if !cell.is_ascii_uppercase() || cell == b'S' || state[idx].is_some() {
-                return None;
-            }
-
-            let i_idx = positions[(cell - b'A') as usize];
-            let iy = i_idx / WIDTH;
-            let ix = i_idx % WIDTH;
-            let ir = [
-                (iy.wrapping_sub(1), ix),
-                (iy.wrapping_add(1), ix),
-                (iy, ix.wrapping_sub(1)),
-                (iy, ix.wrapping_add(1)),
-            ]
-            .into_iter()
-            .find_map(|(jy, jx)| state[jy * WIDTH + jx])?;
-
-            Some((idx / WIDTH, idx % WIDTH, ir))
-        }));
     }
 
     lights.sort_unstable_by_key(|&(y, x, _)| (y, x));
