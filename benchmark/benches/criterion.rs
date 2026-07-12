@@ -37,4 +37,5 @@ problems!(
     puzzle04,
     puzzle05,
     puzzle06,
+    puzzle07,
 );

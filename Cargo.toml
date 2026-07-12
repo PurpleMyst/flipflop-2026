@@ -8,6 +8,7 @@ members = [
     "puzzle04",
     "puzzle05",
     "puzzle06",
+    "puzzle07",
 ]
 
 [workspace.metadata.tasks]
@@ -38,5 +39,9 @@ completion_time = 2026-07-10T11:59:41.905705
 [workspace.metadata.puzzle06]
 start_time = 2026-07-11T14:40:35.116426
 completion_time = 2026-07-11T15:57:21.828093
+
+[workspace.metadata.puzzle07]
+start_time = 2026-07-12T13:49:12.443014
+completion_time = 2026-07-12T14:16:18.458843
 [profile.release]
 debug = true
