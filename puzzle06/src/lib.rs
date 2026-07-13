@@ -77,7 +77,7 @@ pub fn solve_part1() -> impl Display {
         .flat_map(|s| s.trim().bytes())
         .collect::<Vec<u8>>();
 
-    let start_idx = map.iter().position(|&b| b == b'S').unwrap();
+    let start_idx = memchr::memchr(b'S', &map).unwrap();
     let mut q = VecDeque::new();
     q.push_back((start_idx / WIDTH, start_idx % WIDTH, CounterClockwise));
     let mut state = Seen::default();
@@ -124,7 +124,7 @@ pub fn solve_part2() -> impl Display {
 
 fn do_solve(map: &[u8]) -> u64 {
     let mut lights = Vec::new();
-    let start_idx = map.iter().position(|&b| b == b'S').unwrap();
+    let start_idx = memchr::memchr(b'S', map).unwrap();
     let positions = letter_positions(map);
     let mut q = VecDeque::new();
     q.push_back((start_idx / WIDTH, start_idx % WIDTH, CounterClockwise));

@@ -1,3 +1,4 @@
+use atoi::FromRadix10;
 use std::fmt::Display;
 
 #[inline]
@@ -12,8 +13,12 @@ pub fn solve_part1() -> impl Display {
     let mut sushi = sushi
         .lines()
         .map(|l| {
-            let (x, y) = l.split_once(',').unwrap();
-            (x.parse::<usize>().unwrap(), y.parse::<usize>().unwrap())
+            let (x_str, y_str) = l.split_once(',').unwrap();
+            let (x, used_x) = usize::from_radix_10(x_str.as_bytes());
+            let (y, used_y) = usize::from_radix_10(y_str.as_bytes());
+            debug_assert_eq!(used_x, x_str.len());
+            debug_assert_eq!(used_y, y_str.len());
+            (x, y)
         })
         .peekable();
 
@@ -47,8 +52,12 @@ pub fn solve_part2() -> impl Display {
     let mut sushi = sushi
         .lines()
         .map(|l| {
-            let (x, y) = l.split_once(',').unwrap();
-            (x.parse::<usize>().unwrap(), y.parse::<usize>().unwrap())
+            let (x_str, y_str) = l.split_once(',').unwrap();
+            let (x, used_x) = usize::from_radix_10(x_str.as_bytes());
+            let (y, used_y) = usize::from_radix_10(y_str.as_bytes());
+            debug_assert_eq!(used_x, x_str.len());
+            debug_assert_eq!(used_y, y_str.len());
+            (x, y)
         })
         .peekable();
 
@@ -85,8 +94,12 @@ pub fn solve_part3() -> impl Display {
     let mut sushi = sushi
         .lines()
         .map(|l| {
-            let (x, y) = l.split_once(',').unwrap();
-            (x.parse::<usize>().unwrap(), y.parse::<usize>().unwrap())
+            let (x_str, y_str) = l.split_once(',').unwrap();
+            let (x, used_x) = usize::from_radix_10(x_str.as_bytes());
+            let (y, used_y) = usize::from_radix_10(y_str.as_bytes());
+            debug_assert_eq!(used_x, x_str.len());
+            debug_assert_eq!(used_y, y_str.len());
+            (x, y)
         })
         .peekable();
 

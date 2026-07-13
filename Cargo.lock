@@ -33,6 +33,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "940b3a0ca603d1eade50a4846a2afffd5ef57a9feac2c0e2ec2e14f9ead76000"
 
 [[package]]
+name = "atoi"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f28d99ec8bfea296261ca1af174f24225171fea9664ba9003cbebee704810528"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -360,6 +369,9 @@ dependencies = [
 [[package]]
 name = "puzzle01"
 version = "0.1.0"
+dependencies = [
+ "atoi",
+]
 
 [[package]]
 name = "puzzle02"
@@ -380,10 +392,16 @@ version = "0.1.0"
 [[package]]
 name = "puzzle06"
 version = "0.1.0"
+dependencies = [
+ "memchr",
+]
 
 [[package]]
 name = "puzzle07"
 version = "0.1.0"
+dependencies = [
+ "atoi",
+]
 
 [[package]]
 name = "quote"
