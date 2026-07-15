@@ -61,6 +61,7 @@ dependencies = [
  "puzzle07",
  "puzzle08",
  "puzzle09",
+ "puzzle10",
 ]
 
 [[package]]
@@ -472,6 +473,10 @@ version = "0.1.0"
 dependencies = [
  "pathfinding",
 ]
+
+[[package]]
+name = "puzzle10"
+version = "0.1.0"
 
 [[package]]
 name = "quote"
