@@ -14,6 +14,7 @@ import shlex
 import subprocess
 import sys
 import typing as t
+import webbrowser
 from contextlib import chdir
 from datetime import datetime
 from functools import partial, wraps
@@ -87,9 +88,9 @@ def run(cmd: t.Sequence[str | Path], /, **kwargs) -> subprocess.CompletedProcess
     return proc
 
 
-def add_line(p: Path, l: str) -> None:
+def add_line(p: Path, line: str) -> None:
     ls = p.read_text().splitlines()
-    ls.insert(-1, l)
+    ls.insert(-1, line)
     if ls[-1] != "":
         # add or keep trailing newline
         ls.append("")
@@ -272,6 +273,8 @@ def start_solve(num: int | None = None) -> None:
     add_line(benches / "criterion.rs", f"    {crate},")
 
     run(("git", "add", crate))
+
+    webbrowser.open(f"https://{FLIPFLOP_HOST}/{YEAR}/{num}")
 
 
 @app.command(name="submit", alias="s")
