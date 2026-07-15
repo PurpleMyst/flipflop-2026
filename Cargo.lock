@@ -395,9 +395,6 @@ version = "0.1.0"
 [[package]]
 name = "puzzle06"
 version = "0.1.0"
-dependencies = [
- "memchr",
-]
 
 [[package]]
 name = "puzzle07"
