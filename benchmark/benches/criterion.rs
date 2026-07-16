@@ -41,4 +41,5 @@ problems!(
     puzzle08,
     puzzle09,
     puzzle10,
+    puzzle11,
 );

@@ -1,0 +1,62 @@
+    01          XX          XX          07          07          00          04          XX
+05  00  XX  04  01  00  XX  02  XX  07  03  04  02  04  XX  XX  05  XX  XX  06  03  00  07  XX
+
+    20          XX          XX          XX          20          XX          07          12          XX          14          XX          15          26          23          06          XX          XX          XX          XX          19          18          XX          XX          14          28          XX          XX          XX          XX          XX          XX          XX
+XX  00  XX  XX  01  19  10  02  28  XX  03  XX  XX  04  XX  XX  05  05  XX  06  20  11  07  XX  XX  08  12  XX  09  02  XX  10  12  XX  11  XX  12  12  XX  XX  13  28  15  14  04  29  15  XX  08  16  28  XX  17  22  12  18  XX  XX  19  XX  18  20  19  01  21  18  XX  22  XX  XX  23  16  04  24  XX  XX  25  XX  04  26  XX  09  27  XX  28  28  12  XX  29  XX  XX  30  XX  XX  31  20
+
+    04          01          02          01          06          03          XX          XX
+07  00  00  XX  01  XX  XX  02  06  00  03  06  XX  04  XX  03  05  07  XX  06  XX  03  07  XX
+
+    25          31          23          20          XX          02          XX          14          07          XX          11          02          24          28          XX          XX          26          XX          XX          13          15          XX          13          06          15          06          11          31          XX          01          XX          07
+08  00  10  XX  01  02  14  02  XX  17  03  XX  24  04  XX  31  05  15  23  06  29  XX  07  04  XX  08  03  19  09  XX  XX  10  27  27  11  30  XX  12  21  07  13  XX  XX  14  XX  XX  15  10  XX  16  24  12  17  XX  20  18  16  XX  19  22  04  20  22  XX  21  02  19  22  XX  XX  23  03  00  24  14  05  25  19  12  26  15  05  27  01  01  28  23  XX  29  XX  XX  30  XX  07  31  XX
+
+    XX          XX          12          13          17          XX          XX          24          XX          XX          XX          11          XX          21          31          XX          XX          21          11          XX          XX          16          03          XX          XX          29          XX          XX          XX          08          11          XX
+05  00  02  XX  01  XX  31  02  XX  XX  03  XX  XX  04  XX  09  05  15  17  06  11  22  07  03  31  08  XX  31  09  XX  29  10  25  XX  11  28  28  12  26  20  13  12  19  14  15  14  15  22  XX  16  14  22  17  16  25  18  27  28  19  09  00  20  XX  XX  21  XX  22  22  09  XX  23  XX  01  24  19  16  25  XX  01  26  XX  26  27  XX  26  28  29  XX  29  XX  07  30  04  03  31  XX
+
+    12          04          15          XX          XX          09          00          XX          15          05          06          11          04          XX          XX          03
+06  00  14  XX  01  XX  11  02  03  XX  03  XX  00  04  04  07  05  04  14  06  09  XX  07  XX  XX  08  08  04  09  01  06  10  03  XX  11  08  15  12  XX  XX  13  11  13  14  02  11  15  XX
+
+    14          08          14          14          XX          XX          02          05          03          XX          08          13          02          04          XX          08
+12  00  15  XX  01  06  00  02  08  03  03  XX  XX  04  15  05  05  08  07  06  07  05  07  XX  14  08  XX  12  09  XX  12  10  02  XX  11  13  XX  12  12  09  13  06  XX  14  09  XX  15  12
+
+    00          11          05          06          13          09          09          XX          13          13          02          XX          XX          02          XX          XX
+13  00  XX  XX  01  15  XX  02  08  XX  03  12  09  04  07  XX  05  00  12  06  14  03  07  14  02  08  XX  XX  09  03  10  10  14  XX  11  XX  14  12  XX  11  13  11  12  14  14  08  15  02
+
+    12          00          06          XX          00          XX          13          XX          10          XX          02          XX          XX          XX          05          09
+09  00  XX  15  01  XX  XX  02  10  13  03  10  00  04  09  11  05  01  13  06  XX  09  07  11  07  08  04  08  09  XX  05  10  XX  06  11  01  XX  12  XX  XX  13  XX  06  14  11  XX  15  12
+
+    10          10          05          10          16          XX          13          XX          09          01          16          14          16          21          XX          10          XX          11          XX          XX          XX          15          XX          XX          XX          XX          04          XX          XX          XX          11          XX
+27  00  05  XX  01  07  27  02  XX  22  03  25  27  04  20  XX  05  XX  05  06  XX  28  07  18  23  08  XX  XX  09  XX  XX  10  XX  XX  11  26  31  12  29  XX  13  28  12  14  XX  14  15  XX  15  16  20  XX  17  XX  XX  18  XX  11  19  XX  08  20  23  XX  21  30  27  22  XX  XX  23  XX  19  24  XX  XX  25  XX  XX  26  21  XX  27  24  XX  28  23  XX  29  XX  XX  30  XX  XX  31  20
+
+    15          XX          07          09          03          XX          XX          09          XX          XX          15          00          03          09          11          02
+XX  00  00  01  01  08  XX  02  12  XX  03  14  XX  04  03  07  05  04  XX  06  XX  XX  07  XX  XX  08  XX  09  09  02  05  10  XX  XX  11  03  14  12  06  08  13  09  XX  14  13  09  15  11
+
+    07          XX          04          00          XX          01          02          01
+XX  00  03  02  01  06  XX  02  05  XX  03  XX  01  04  00  03  05  04  XX  06  XX  XX  07  04
+
+    06          08          14          07          05          XX          08          14          15          05          01          08          03          09          02          XX
+03  00  XX  14  01  XX  07  02  01  05  03  XX  10  04  XX  02  05  04  XX  06  07  XX  07  XX  XX  08  XX  06  09  00  01  10  13  02  11  02  XX  12  04  02  13  13  07  14  02  XX  15  02
+
+    XX          00          07          07          02          02          XX          XX
+02  00  01  XX  01  XX  XX  02  XX  XX  03  01  03  04  01  XX  05  02  XX  06  01  07  07  XX
+
+    07          XX          04          XX          05          XX          04          06
+07  00  XX  XX  01  XX  06  02  01  06  03  XX  07  04  01  06  05  04  00  06  06  07  07  05
+
+    18          24          26          30          XX          XX          XX          XX          27          21          26          XX          27          XX          30          XX          XX          24          11          XX          XX          05          XX          XX          28          XX          XX          XX          XX          15          21          XX
+26  00  XX  06  01  XX  00  02  XX  09  03  23  XX  04  XX  29  05  22  XX  06  XX  19  07  XX  09  08  XX  09  09  XX  06  10  XX  23  11  XX  XX  12  XX  20  13  XX  XX  14  XX  XX  15  28  18  16  XX  04  17  XX  19  18  26  16  19  25  XX  20  09  19  21  XX  XX  22  XX  XX  23  XX  XX  24  05  29  25  26  XX  26  20  12  27  XX  29  28  03  XX  29  XX  XX  30  XX  XX  31  10
+
+    00          07          XX          XX          XX          01          XX          04
+07  00  01  XX  01  XX  00  02  07  XX  03  XX  XX  04  04  XX  05  06  XX  06  07  XX  07  06
+
+    XX          XX          01          XX          01          XX          00          XX
+06  00  XX  01  01  XX  03  02  XX  07  03  XX  07  04  02  05  05  XX  XX  06  05  07  07  05
+
+    09          00          XX          XX          10          XX          XX          XX          XX          XX          XX          XX          22          29          XX          XX          23          XX          XX          XX          XX          XX          XX          XX          XX          XX          XX          XX          10          XX          XX          12
+30  00  30  XX  01  XX  07  02  22  19  03  16  XX  04  18  XX  05  14  XX  06  XX  30  07  15  XX  08  08  01  09  XX  21  10  00  XX  11  XX  09  12  XX  06  13  01  10  14  XX  XX  15  XX  XX  16  XX  XX  17  09  XX  18  08  00  19  XX  XX  20  XX  XX  21  XX  XX  22  10  XX  23  XX  XX  24  31  18  25  XX  11  26  XX  15  27  XX  19  28  01  XX  29  XX  XX  30  02  08  31  18
+
+    14          09          08          08          04          XX          07          XX          01          XX          XX          11          XX          00          13          XX
+XX  00  XX  06  01  08  XX  02  12  03  03  08  13  04  06  02  05  15  XX  06  05  08  07  02  02  08  01  06  09  XX  15  10  08  13  11  02  03  12  07  XX  13  XX  XX  14  05  XX  15  00
+
+    05          16          XX          29          23          04          21          XX          XX          29          XX          27          XX          XX          31          XX          20          XX          XX          XX          31          21          XX          XX          28          16          XX          XX          17          XX          07          XX
+XX  00  XX  XX  01  10  XX  02  XX  XX  03  XX  XX  04  XX  25  05  XX  XX  06  24  00  07  28  XX  08  02  XX  09  05  XX  10  22  08  11  06  31  12  XX  XX  13  XX  XX  14  XX  25  15  21  20  16  01  XX  17  XX  XX  18  XX  17  19  29  XX  20  13  XX  21  XX  XX  22  11  04  23  09  XX  24  01  XX  25  00  28  26  XX  06  27  XX  XX  28  XX  XX  29  10  XX  30  XX  28  31  XX
