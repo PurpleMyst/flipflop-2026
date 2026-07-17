@@ -63,6 +63,7 @@ dependencies = [
  "puzzle09",
  "puzzle10",
  "puzzle11",
+ "puzzle12",
 ]
 
 [[package]]
@@ -431,6 +432,10 @@ version = "0.1.0"
 dependencies = [
  "itertools 0.15.0",
 ]
+
+[[package]]
+name = "puzzle12"
+version = "0.1.0"
 
 [[package]]
 name = "quote"
